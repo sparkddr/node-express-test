@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Ou une version plus récente selon votre environnement
+    "module": "commonjs", // Ou "esnext" si vous utilisez les modules ES
+    "outDir": "./dist", // Répertoire de sortie pour le code compilé
+    "esModuleInterop": true, // Important pour l'interopérabilité avec les modules CommonJS
+    "forceConsistentCasingInFileNames": true,
+    "strict": true, // Active le mode strict de TypeScript (fortement recommandé)
+    "skipLibCheck": true,
+    "resolveJsonModule": true, // Permet l'import de fichiers JSON
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*.ts"
+  ], // Inclure tous les fichiers .ts dans le dossier src
+  "exclude": [
+    "node_modules"
+  ] // Exclure le dossier node_modules
+}
