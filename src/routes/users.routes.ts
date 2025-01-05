@@ -1,10 +1,11 @@
 import express from "express";
-import { getUserById, getUsers, updateUser } from "../controllers/users.controller";
+import { getUserById, getUsers, getUsersByName, updateUser } from "../controllers/users.controller";
 import { asyncRouteHandler } from "../utils/asyncRouteHandler";
 
 const router = express.Router()
 
 router.get('/', asyncRouteHandler(getUsers));
+router.get('/search', asyncRouteHandler(getUsersByName))
 router.get('/:id', asyncRouteHandler(getUserById))
 router.patch('/:id', asyncRouteHandler(updateUser))
 

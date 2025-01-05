@@ -48,6 +48,28 @@ const getUserById = async (req: Request, res: Response) => {
     }
 };
 
+const getUsersByName = async (req:Request , res:Response)=>{
+    try{
+        const searchTerm = req.query.name 
+        console.log("search term",searchTerm);
+        
+        if (typeof searchTerm !== 'string') {
+            return res.status(400).json({ message: "Le paramètre 'name' est invalide ou manquant." });
+        }
+        if (!searchTerm) {
+            return res.status(400).json({ message: "Terme de recherche manquant" });
+        }
+        // Utilisation d'une expression régulière pour une recherche insensible à la casse
+        const user = await UserModel.find({ name: { $regex: new RegExp(searchTerm, 'i') } });
+        return res.status(200).json(user)
+
+
+    }catch(error){
+        console.error("Erreur lors de la recherche d'utilisateurs : ", error);
+        res.status(500).json({ message: "Erreur serveur", error });        
+    }
+}
+
 const createUser = async (req:Request, res:Response)=>{
     try{
         const newUser = new UserModel(req.body)
@@ -88,4 +110,20 @@ const updateUser = async (req:Request, res:Response)=>{
     }
 }
 
-export {getUsers,getUserById,createUser,updateUser}
+const deleteUser = async (req : Request, res : Response )=>{
+    try{
+        const userId = req.params.id
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "ID utilisateur invalide" });
+        }
+        const deletedUser = await UserModel.findByIdAndDelete(userId)
+        return res.status(204).json(deletedUser)
+
+    }catch (error){
+        console.error("Erreur lors de la suppression de l'utilisateur")
+        res.status(400).json({ error: error, message: "Erreur lors de la suppression de l'utilisateur" })
+    }
+}
+
+
+export {getUsers,getUserById,createUser,updateUser,deleteUser,getUsersByName}

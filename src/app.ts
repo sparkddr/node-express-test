@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { Db, MongoClient, ServerApiVersion } from 'mongodb';
 import mongoose from 'mongoose';
 import userRoutes from './routes/users.routes'
+import morgan from 'morgan'
 
 const uri = process.env.MONGODB_URI
 if (!uri) {
@@ -26,6 +27,7 @@ const client = new MongoClient(uri, {
 });
 
 let db: Db | null = null
+app.use(morgan("dev"))
 
 const connectToDatabase = async () => {
     try {
