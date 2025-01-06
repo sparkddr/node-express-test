@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { Db, MongoClient, ServerApiVersion } from 'mongodb';
 import mongoose from 'mongoose';
 import userRoutes from './routes/users.routes'
+import authRoutes from './routes/auth.routes'
 import morgan from 'morgan'
 
 const uri = process.env.MONGODB_URI
@@ -44,6 +45,7 @@ async function startServer() {
     app.locals.db = database;
     app.use(express.json());
     app.use('/users', userRoutes)
+    app.use('/auth', authRoutes)
     app.listen(port, () => {
         console.log(`Serveur démarré sur le port ${port}`);
     });
