@@ -9,12 +9,6 @@ const SALT_ROUNDS = 10;
 const updateUserSchema = z.object({
     name: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(50, "Le nom ne doit pas dépasser 50 caractères").optional(),
     email: z.string().email("Format d'email invalide").optional(),
-    // // Ajoutez ici les autres champs optionnels avec leurs validations
-    // age: z.number().int("L'âge doit être un nombre entier").positive("L'âge doit être positif").optional(),
-    // isActive: z.boolean().optional(),
-    // // Exemple avec un enum
-    // role: z.enum(["admin", "user", "moderateur"], {invalid_type_error: "Le role doit être 'admin', 'user' ou 'moderateur'"}).optional(),
-    // //...s
 }).strict();
 
 const createUserSchema = z.object({
@@ -38,8 +32,8 @@ const getUserById = async (req: Request, res: Response) => {
     try {
         const userId = req.params.id;
 
-        // Validation de l'ID : très important pour éviter les erreurs et les failles de sécurité
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
+        // Validation de l'ID 
+        if (!mongoose.Types.ObjectId.isValid(userId))  {
             return res.status(400).json({ message: "ID utilisateur invalide" });
         }
 

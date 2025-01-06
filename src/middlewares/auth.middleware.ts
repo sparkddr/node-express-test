@@ -26,12 +26,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         if (!authHeader) {
             throw new Error()
         }
-        console.log(authHeader);
-
         const token = authHeader.split(' ')[1];
-
-        console.log(process.env.JWT_SECRET);
-
 
         jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
             if (err) {
@@ -45,6 +40,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
             if (!validationResult.success) {
                 console.error("Erreur de validation du JWT:", validationResult.error.errors);
                 req.user = undefined;
+                res.status(400).json({message:"Invalid Token"})
                 return next(new Error("Invalid token format"));
             }
 
@@ -60,6 +56,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         })
     } catch (error) {
         console.error("Erreur lors de la vérification du token");
+        res.status(400).json({message:"Authentification Incident"})
         return next(new Error("Invalid token")); // Utilisation correcte de next(error)
     };
 };

@@ -15,7 +15,7 @@ console.log('url', uri);
 
 
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -29,6 +29,9 @@ const client = new MongoClient(uri, {
 
 let db: Db | null = null
 app.use(morgan("dev"))
+app.use(express.json());
+app.use('/users', userRoutes)
+app.use('/auth', authRoutes)
 
 const connectToDatabase = async () => {
     try {
@@ -43,15 +46,16 @@ const connectToDatabase = async () => {
 async function startServer() {
     const database = await connectToDatabase();
     app.locals.db = database;
-    app.use(express.json());
-    app.use('/users', userRoutes)
-    app.use('/auth', authRoutes)
     app.listen(port, () => {
         console.log(`Serveur démarré sur le port ${port}`);
     });
 }
 
-startServer();
+if(process.env.NODE_ENV !== 'test'){
+    startServer();
+}
+
+
 
 
 
