@@ -18,15 +18,24 @@ const createUserSchema = z.object({
 })
 
 const getUsers = async (req: Request, res: Response) => {
-    console.log('usermodelcollection', UserModel.collection.name);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
     try {
-        const users = await UserModel.find()
-        res.status(200).json(users)
+        const users = await UserModel.find().skip(skip).limit(limit).sort({ name: 1 });
+        const totalUsers = await UserModel.countDocuments();
+        console.log(totalUsers);
+        res.status(200).json({
+            data: users,
+            currentPage: page,
+            totalPages: Math.ceil(totalUsers / limit),
+            totalUsers,
+        });
     } catch (error) {
-        console.error("Erreur lors de la récupération des utilisateurs", error)
-        res.status(500).json({ error: error, message: "Erreur serveur" })
+        res.status(500).json({ error });
     }
-}
+};
 
 const getUserById = async (req: Request, res: Response) => {
     try {

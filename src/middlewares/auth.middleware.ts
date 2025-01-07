@@ -57,6 +57,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     } catch (error) {
         console.error("Erreur lors de la vérification du token");
         res.status(400).json({message:"Authentification Incident"})
-        return next(new Error("Invalid token")); // Utilisation correcte de next(error)
+        return next(new Error("Invalid token")); 
     };
 };

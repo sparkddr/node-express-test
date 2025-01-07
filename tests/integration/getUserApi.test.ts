@@ -1,9 +1,8 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import { app } from '../../src/app';  // Assure-toi que ton app est exportée
+import { app } from '../../src/app'; 
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import UserModel from '../../src/models/user.model';  // Ton modèle User
-
+import UserModel from '../../src/models/user.model'; 
 let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
