@@ -82,6 +82,19 @@ const getUsersByName = async (req: Request, res: Response) => {
     }
 }
 
+const getUsersByEmail = async (req: Request, res: Response) => {
+    try {
+        const email = req.query.email;
+        if (!email) {
+            return res.status(400).json({ message: "L'email est requis" });
+        }
+        const user = await UserModel.find({ email });
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+}
+
 const createUser = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
@@ -166,4 +179,4 @@ const getProfil = (req: Request, res: Response) => {
          res.status(200).json({ user: req.user })
          }
 
-export { getUsers, getUserById, createUser, updateUser, deleteUser, getUsersByName, getProfil }
+export { getUsers, getUserById, createUser, updateUser, deleteUser, getUsersByName, getProfil , getUsersByEmail}

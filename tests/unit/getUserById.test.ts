@@ -31,3 +31,13 @@ describe('GET /users/:id - getUserById', () => {
     expect(res.body.name).toBe('John Doe');
   });
 });
+
+
+describe('GET /users/search - getUsersByName', () => {
+    it('should return 200 and the users if the users are found', async () => {
+        const res = await request(app).get('/users/search?name=John');
+        expect(res.status).toBe(200);
+        expect(res.body.length).toBeGreaterThan(0);
+    });
+});
+
