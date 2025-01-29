@@ -1,23 +1,32 @@
-const mongoose = require("mongoose");
+import { Schema, model, Document, Types } from "mongoose";
+import {
+  Offer,
+  OFFER_STATUS,
+  ALTERNANCE_TEMPO,
+  EXPECTED_DURATION,
+  EDUCATION_LEVEL,
+} from "../type/offer.types";
 
-const offerSchema = new mongoose.Schema(
+type OfferDocument = Offer & Document;
+
+const offerSchema = new Schema<OfferDocument>(
   {
     status: {
       type: String,
-      enum: ["active", "inactive"],
+      enum: OFFER_STATUS,
       required: true,
     },
     companyId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
-      ref: "Company", // Important: référence au modèle Company (si vous en avez un)
+      ref: "Company", // Important: référence au modèle Company
     },
-    appliedStudents: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Student", // Important: référence au modèle Student (si vous en avez un)
-      },
-    ],
+    // appliedStudents: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Student", // Important: référence au modèle Student (si vous en avez un)
+    //   },
+    // ],
     specialty: {
       // "Métiers"
       type: String,
@@ -57,51 +66,66 @@ const offerSchema = new mongoose.Schema(
         },
       },
     },
-    contactCompany: {
-      type: Boolean,
-      default: false,
-    },
-    startDate: Date,
-    endDate: Date,
     alternanceTempo: {
       type: String,
-      // required: true, // À définir avec Nicolas (ajouter les valeurs enum une fois définies)
-      // enum: ['Valeur1', 'Valeur2', 'Valeur3'], // Exemple
+      enum: ALTERNANCE_TEMPO,
+      required: true,
     },
-    expectedDuration: String,
-    flexibleStartDate: {
-      type: Boolean,
-      default: false,
+    // contactCompany: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    // startDate: Date,
+    // endDate: Date,
+    // alternanceTempo: {
+    //   type: String,
+    //   // required: true, // À définir avec Nicolas (ajouter les valeurs enum une fois définies)
+    //   // enum: ['Valeur1', 'Valeur2', 'Valeur3'], // Exemple
+    // },
+    expectedDuration: {
+      type: String,
+      enum: EXPECTED_DURATION,
+      required: true,
     },
-    educationLevel: String,
-    remoteWork: {
-      type: Boolean,
-      default: false,
+    // flexibleStartDate: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    educationLevel: {
+      type: String,
+      enum: EDUCATION_LEVEL,
+      required: true,
     },
-    remoteWorkFrequency: String,
-    requiredLanguages: [String],
+    // remoteWork: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    // remoteWorkFrequency: String,
+    // requiredLanguages: [String],
     skills: {
       soft: [String],
       hard: [String],
     },
-    applicationInstructions: {
-      channelType: {
-        type: String,
-        enum: ["viaCompanySite", "viaEmail", "viaPlatform"],
-        required: true,
-      },
-      companySiteUrl: String,
-      contactEmail: String,
-    },
-    openToRqthProfiles: {
-      type: Boolean,
-      default: false,
-    },
+    // applicationInstructions: {
+    //   channelType: {
+    //     type: String,
+    //     enum: ["viaCompanySite", "viaEmail", "viaPlatform"],
+    //     required: true,
+    //   },
+    //   companySiteUrl: String,
+    //   contactEmail: String,
+    // },
+    // openToRqthProfiles: {
+    //   type: Boolean,
+    //   default: false,
+    // },
   },
   { timestamps: true }
 ); // Ajoute automatiquement createdAt et updatedAt
 
-const OfferModel = mongoose.model("Offer", offerSchema);
-export default OfferModel;
+// Déplacer les index avant la création du modèle
+offerSchema.index({ jobTitle: 1 });
+offerSchema.index({ "address.geolocation": "2dsphere" });
 
-// offerSchema.index({ "address.geolocation": "2dsphere" }); // Index géospatial
+const OfferModel = model<Offer>("Offer", offerSchema);
+export default OfferModel;
